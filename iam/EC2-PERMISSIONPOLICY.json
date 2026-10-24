@@ -1,0 +1,25 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListOnlySitePrefix",
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::aws-lab7-cv-ali-2026-unique123",
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "site/",
+                        "site/*"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "ReadOnlySiteObjects",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::aws-lab7-cv-ali-2026-unique123/site/*"
+        }
+    ]
+}
