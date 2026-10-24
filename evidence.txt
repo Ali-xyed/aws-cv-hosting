@@ -1,0 +1,184 @@
+AWS CV Hosting Evidence
+Collected at: 2026-10-24T12:47:58+00:00
+Region: ap-southeast-2
+Bucket: aws-lab7-cv-ali-2026-unique123
+EC2 address: http://3.26.155.128/
+Lambda URL: https://2y2ol2ratf6x5whdwm72lfrg7a0zyosv.lambda-url.ap-southeast-2.on.aws/
+
+========== 1. caller ==========
+{
+    "UserId": "AROASZRDR3JYPVKF5UYAX:34e82498-7041-70fd-45bb-310997fe3193",
+    "Account": "192274356848",
+    "Arn": "arn:aws:sts::192274356848:assumed-role/AccountFullAccessRole/34e82498-7041-70fd-45bb-310997fe3193"
+}
+
+========== 2. public-access ==========
+{
+    "PublicAccessBlockConfiguration": {
+        "BlockPublicAcls": true,
+        "IgnorePublicAcls": true,
+        "BlockPublicPolicy": true,
+        "RestrictPublicBuckets": true
+    }
+}
+
+========== 3. versioning ==========
+{
+    "Status": "Enabled"
+}
+
+========== 4. objects ==========
+------------------------------
+|        ListObjectsV2       |
++------------------+---------+
+|        Key       |  Size   |
++------------------+---------+
+|  site/           |  0      |
+|  site/cv.pdf     |  78653  |
+|  site/index.html |  1083  |
+|  site/style.css  |  602    |
++------------------+---------+
+
+========== 5. ec2-policy ==========
+--- Attached policies ---
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "Lab7-Read-CV-Objects",
+            "PolicyArn": "arn:aws:iam::192274356848:policy/Lab7-Read-CV-Objects"
+        }
+    ]
+}
+--- Inline policies ---
+{
+    "PolicyNames": []
+}
+--- Managed policy document (verified separately) ---
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ListOnlySitePrefix",
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::aws-lab7-cv-ali-2026-unique123",
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "site/",
+                        "site/*"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "ReadOnlySiteObjects",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::aws-lab7-cv-ali-2026-unique123/site/*"
+        }
+    ]
+}
+
+========== 6. lambda-policy ==========
+--- Attached policies ---
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AWSLambdaBasicExecutionRole",
+            "PolicyArn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        },
+        {
+            "PolicyName": "Lab7-Read-CV-Objects",
+            "PolicyArn": "arn:aws:iam::192274356848:policy/Lab7-Read-CV-Objects"
+        }
+    ]
+}
+--- Inline policies ---
+{
+    "PolicyNames": [
+        "Lab7-Lambda-Read-CV"
+    ]
+}
+{
+    "RoleName": "Lab7-Lambda-S3-Role",
+    "PolicyName": "Lab7-Lambda-Read-CV",
+    "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "ReadCVSiteObjects",
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::aws-lab7-cv-ali-2026-unique123/site/*"
+            }
+        ]
+    }
+}
+
+========== 7. security-group ==========
+[
+    [
+        {
+            "GroupId": "sg-0759fe7049d87a10b",
+            "GroupName": "launch-wizard-1"
+        }
+    ]
+]
+Note: This collected output identifies the security group but does not include its inbound rules. Verify those separately before submission.
+
+========== 8. instance ==========
+[
+    {
+        "Id": "i-02d19ce5705cd334e",
+        "State": "running",
+        "Type": "t3.micro",
+        "PublicIP": "3.26.155.128",
+        "IAM": "arn:aws:iam::192274356848:instance-profile/Lab7-EC2-S3-Role",
+        "Metadata": "required"
+    }
+]
+
+========== 9. endpoints ==========
+--- EC2 endpoint ---
+HTTP 200
+--- Lambda endpoint ---
+HTTP 200
+--- Lambda CSS route ---
+HTTP 200
+--- Lambda PDF route ---
+HTTP 200
+--- Lambda unknown route ---
+HTTP 404
+
+========== 10. lambda-logs ==========
+{
+    "logStreams": [
+        {
+            "logStreamName": "2026/10/24/[$LATEST]aff6484169cf424da56d9e0a6c40faab",
+            "creationTime": 1792843892537,
+            "firstEventTimestamp": 1792843888917,
+            "lastEventTimestamp": 1792843888917,
+            "lastIngestionTime": 1792844075680,
+            "uploadSequenceToken": "49039859690806980938453543936566691424483026543893731757",
+            "arn": "arn:aws:logs:ap-southeast-2:192274356848:log-group:/aws/lambda/Lab7-CV-Website:log-stream:2026/10/24/[$LATEST]aff6484169cf424da56d9e0a6c40faab",
+            "storedBytes": 0
+        }
+    ]
+}
+
+========== 11. log-retention ==========
+[
+    {
+        "LogGroup": "/aws/lambda/Lab7-CV-Website",
+        "RetentionDays": 7
+    }
+]
+
+========== REMAINING EVIDENCE TO COLLECT ==========
+1. Security-group inbound rules (the current script output only shows the group ID/name).
+2. Last 10 lines of the EC2 sync log.
+3. An actual AccessDenied test/output required by the assignment, if applicable.
+4. Confirm resource tags: Owner=23L-3067 and Course=cloud on the bucket, EC2 instance, Lambda function, and both IAM roles.
+
+Note: This report combines the actual evidence pasted from CloudShell with the complete managed IAM policy document verified separately. It does not fabricate the missing checks listed above.
