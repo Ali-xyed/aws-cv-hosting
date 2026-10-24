@@ -1,0 +1,38 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 32px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    color: #1d4ed8;
+}
+
+h2 {
+    margin-top: 28px;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 12px 20px;
+    background: #1d4ed8;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.button:hover {
+    background: #1e40af;
+}
